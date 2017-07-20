@@ -4,9 +4,10 @@ using System.Text;
 
 namespace ConferenceDTO
 {
-    public class SpeakerResponse : Speaker
+    public class TrackResponse : Track
     {
-        // TODO: Set order of JSON proeprties so this shows up last not first
+        public Conference Conference { get; set; }
+
         public ICollection<Session> Sessions { get; set; } = new List<Session>();
     }
 }

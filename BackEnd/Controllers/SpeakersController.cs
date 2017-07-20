@@ -1,10 +1,12 @@
-﻿using BackEnd.Data;
-using BackEnd.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using BackEnd.Data;
+using BackEnd.Infrastructure;
 
 namespace BackEnd.Controllers
 {
@@ -23,28 +25,25 @@ namespace BackEnd.Controllers
         public async Task<IActionResult> GetSpeakers()
         {
             var speakers = await _db.Speakers.AsNoTracking()
-                                    .Include(s => s.SessionSpeakers)
-                                        .ThenInclude(ss => ss.Session)
-                                    .ToListAsync();
+                                  .Include(s => s.SessionSpeakers)
+                                    .ThenInclude(ss => ss.Session)
+                                  .ToListAsync();
 
             var result = speakers.Select(s => s.MapSpeakerResponse());
             return Ok(result);
         }
 
-        // GET: api/Speakers/5
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetSpeaker([FromRoute] int id)
+        public async Task<IActionResult> GetSpeaker([FromRoute]int id)
         {
             var speaker = await _db.Speakers.AsNoTracking()
-                                    .Include(s => s.SessionSpeakers)
-                                        .ThenInclude(ss => ss.Session)
-                                    .SingleOrDefaultAsync(s => s.ID == id);
-
+                                            .Include(s => s.SessionSpeakers)
+                                                .ThenInclude(ss => ss.Session)
+                                            .SingleOrDefaultAsync(s => s.ID == id);
             if (speaker == null)
             {
                 return NotFound();
             }
-
             var result = speaker.MapSpeakerResponse();
             return Ok(result);
         }
@@ -115,11 +114,6 @@ namespace BackEnd.Controllers
             await _db.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool SpeakerExists(int id)
-        {
-            return _db.Speakers.Any(e => e.ID == id);
         }
     }
 }

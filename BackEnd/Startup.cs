@@ -52,6 +52,8 @@ namespace BackEnd
             );
 
             app.UseMvc();
+
+            NDCOsloData.Seed(app.ApplicationServices);
         }
     }
 }
